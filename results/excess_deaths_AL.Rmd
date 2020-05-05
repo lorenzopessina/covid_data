@@ -100,6 +100,10 @@ for (i in seq_along(city_list)) {
 
   cat("\n \n")
   
+  # add name of the city
+  g <- g +
+    ggtitle(city)
+  
   # save
   ggsave(plot = g, filename = paste("results/graphs/", city, ".png", sep = ""),
          dpi = "retina", width = 16, height = 9, units = 'cm')
