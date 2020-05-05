@@ -1,3 +1,3 @@
 # covid_data
 
-This is a line from RStudio
+This repository analyses data on Covid published by Italian government offices.
