@@ -51,7 +51,6 @@ data <- read_fst("results/cleaned/excess_deaths/excess_deaths.fst")
 # lista di citta
 city_list <- c( "Alessandria", "Tortona",  "Novi Ligure", "Casale Monferrato", "Acqui Terme", "Ovada", "Valenza", "Arquata Scrivia", "Serravalle Scrivia", "Castelnuovo Scrivia", "Pozzolo Formigaro", "Castellazzo Bormida", "Gavi", "San Salvatore Monferrato")
 
-cat("---")
 
 for (i in seq_along(city_list)) {
   
@@ -81,7 +80,7 @@ for (i in seq_along(city_list)) {
   }
   
   # graph 
-  g<- dgraph %>%
+  g <- dgraph %>%
   ggplot(., aes(week, death, group = year, color = as.factor(color_d),
                 alpha = as.factor(color_d))) +
   geom_line(size = .6) +
@@ -95,10 +94,15 @@ for (i in seq_along(city_list)) {
   xlab('Settimana') +
   ylab('Decessi') +
   mytheme
-  
+
+  # print 
   print(g)
 
   cat("\n \n")
+  
+  # save
+  ggsave(plot = g, filename = paste("results/graphs/", city, ".png", sep = ""),
+         dpi = "retina", width = 16, height = 9, units = 'cm')
   
 }
 
