@@ -1,0 +1,104 @@
+---
+title: "Decessi Settimanali in Provincia di Alessandria"
+subtitle: "Elaborazione dati Istat"
+author: "Lorenzo Pessina"
+date: "5/5/2020"
+output:
+  #pdf_document
+  #beamer_presentation:
+  #  theme: metropolis
+  html_document:
+    toc: FALSE
+    theme: cosmo
+editor_options: 
+  chunk_output_type: console
+---
+
+# Contenuto
+
+- Ogni grafico rappresenta il numero settimanale dei decessi registrati in ciascun cumune nelle prime 14 settimane dell'anno.
+- La fonte dei dati é l'Istat, che li pubblica qui: **https://www.istat.it/it/archivio/240401**
+- I dati sono aggiornati al 24 Aprile 2020.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+
+# packages
+library(tidyverse)
+library(fst)
+
+# graph theme
+mytheme <- theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position = 'bottom',
+        legend.title = element_blank())
+
+```
+
+```{r upload data, include=F}
+
+# upload data
+data <- read_fst("results/cleaned/excess_deaths/excess_deaths.fst")
+
+```
+
+
+```{r graph, results='asis', warning=F, message=F}
+
+# lista di citta
+city_list <- c( "Alessandria", "Tortona",  "Novi Ligure", "Casale Monferrato", "Acqui Terme", "Ovada", "Valenza", "Arquata Scrivia", "Serravalle Scrivia", "Castelnuovo Scrivia", "Pozzolo Formigaro", "Castellazzo Bormida", "Gavi", "San Salvatore Monferrato")
+
+for (i in seq_along(city_list)) {
+  
+  # city
+  city <- city_list[i]
+  
+  # print
+  cat("\n \n")
+  cat("## ")
+  cat(city)
+  cat("\n \n")
+
+  # graph -- data
+  dgraph <- data %>%
+  filter(name_comune == city) %>%
+  filter(sex == 'total') %>%
+  group_by(week, year) %>%
+  summarise(death = sum(death)) %>%
+  mutate(color_d = if_else(year == 2020, 1, 0)) %>% 
+  filter(week <= 15)
+  
+  # y axis max
+  if (city == 'Alessandria') {
+    yaxis_max <- max(dgraph$death) + 15
+  } else {
+    yaxis_max <- 35
+  }
+  
+  # graph 
+  g<- dgraph %>%
+  ggplot(., aes(week, death, group = year, color = as.factor(color_d),
+                alpha = as.factor(color_d))) +
+  geom_line(size = .6) +
+  geom_point(size = 2) +
+  scale_color_manual(values = c('skyblue3', 'maroon'),
+                     labels = c('2015-2019', '2020')) +
+  scale_x_continuous(breaks = 1:15) +
+  scale_y_continuous(limits = c(0, yaxis_max)) +
+    scale_alpha_manual(values = c(.6, 1),
+                       guide = 'none') +
+  xlab('Settimana') +
+  ylab('Decessi') +
+  #  ggtitle(city) +
+  mytheme
+  
+  print(g)
+
+  cat("\n \n")
+  
+}
+
+```
+
