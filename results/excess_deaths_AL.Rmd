@@ -5,20 +5,20 @@ author: "Lorenzo Pessina"
 date: "5/5/2020"
 output:
   #pdf_document
-  #beamer_presentation:
-  #  theme: metropolis
-  html_document:
-    toc: FALSE
-    theme: cosmo
+  beamer_presentation:
+    theme: default
+  #html_document:
+  #  toc: FALSE
+  #  theme: cosmo
 editor_options: 
   chunk_output_type: console
 ---
 
-# Contenuto
+## Contenuto
 
-- Ogni grafico rappresenta il numero settimanale dei decessi registrati in ciascun cumune nelle prime 14 settimane dell'anno.
+- Ogni grafico rappresenta il numero settimanale dei decessi registrati in ciascun cumune nelle prime 15 settimane dell'anno (fino al 12 Aprile nel 2020).
 - La fonte dei dati é l'Istat, che li pubblica qui: **https://www.istat.it/it/archivio/240401**
-- I dati sono aggiornati al 24 Aprile 2020.
+- I dati comprendono l'aggiornamento del 4 maggio.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
@@ -45,10 +45,13 @@ data <- read_fst("results/cleaned/excess_deaths/excess_deaths.fst")
 ```
 
 
+
 ```{r graph, results='asis', warning=F, message=F}
 
 # lista di citta
 city_list <- c( "Alessandria", "Tortona",  "Novi Ligure", "Casale Monferrato", "Acqui Terme", "Ovada", "Valenza", "Arquata Scrivia", "Serravalle Scrivia", "Castelnuovo Scrivia", "Pozzolo Formigaro", "Castellazzo Bormida", "Gavi", "San Salvatore Monferrato")
+
+cat("---")
 
 for (i in seq_along(city_list)) {
   
@@ -91,7 +94,6 @@ for (i in seq_along(city_list)) {
                        guide = 'none') +
   xlab('Settimana') +
   ylab('Decessi') +
-  #  ggtitle(city) +
   mytheme
   
   print(g)
