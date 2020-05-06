@@ -125,8 +125,8 @@ for (i in seq_along(city_list)) {
   scale_y_continuous(limits = c(0, yaxis_max)) +
     scale_alpha_manual(values = c(.6, 1),
                        guide = 'none') +
-  xlab('Settimana') +
-  ylab('Decessi') +
+  xlab('Settimana da inizio anno') +
+  ylab('Decessi per settimana') +
   mytheme
 
   # print 
